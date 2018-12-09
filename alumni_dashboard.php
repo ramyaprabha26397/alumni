@@ -1,3 +1,11 @@
+<?php
+session_start();
+if(isset($_SESSION['userid']))
+{
+  $userid = $_SESSION["userid"];
+  $con = new mysqli("localhost","root","","alumni");
+?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -13,6 +21,7 @@
   </head>
   <body>
     <center>
+      <a href="logout.php"><button style="float:right;margin-right:20px;">Logout</button></a>
       <h1>student alumni booking list</h1>
       <table>
         <tr>
@@ -24,7 +33,6 @@
           <th>action</th>
         </tr>
         <?php
-          $con=new mysqli("localhost","root","","alumni");
           $sql=$con->query("select bookings.*,username,slot_time from bookings inner join user on user.id=bookings.user_id inner join alumni_slots on bookings.slot_id=alumni_slots.id");
           if ($sql->num_rows>0) {
             $sno = 1;
@@ -58,9 +66,14 @@
           }else {
             echo "<tr><td>no data</td></tr>";
           }
-
         ?>
       </table>
     </center>
   </body>
 </html>
+
+<?php
+}else {
+  echo "<script>alert('Unauthorized access');document.location='logout.php'</script>";
+}
+ ?>
